@@ -9,11 +9,11 @@ from matplotlib.figure import Figure
 
 
 def main(fileName: str):
-    startTime: datetime = dp.isoparse(fileName.strip(".log"))
     plt.style.use('_mpl-gallery')
 
     file: TextIO = open(fileName, "r")
     instructions: list = list(map(lambda line: line.strip("\n"), file.readlines()))
+    startTime: datetime = dp.isoparse(instructions[0].split(" ")[1])
     create: list = list(filter(lambda line: line.split(" ")[0] == "CREATE", instructions))
     update: list = list(filter(lambda line: line.split(" ")[0] == "UPDATE", instructions))
 
@@ -22,12 +22,14 @@ def main(fileName: str):
 
     for variables in create:
         splitList: list = variables.split(" ")
+        if splitList[7] != "DOUBLE": continue
         x: float = round(dp.isoparse(splitList[5]).timestamp() - startTime.timestamp(), 3)
         y: float = float(splitList[3])
         plot[splitList[1]] = [[x], [y]]
 
     for variables in update:
         splitList: list = variables.split(" ")
+        if splitList[7] != "DOUBLE": continue
         x: float = round(dp.isoparse(splitList[5]).timestamp() - startTime.timestamp(), 3)
         y: float = float(splitList[3])
         plot[splitList[1]][0].append(x)
@@ -51,4 +53,4 @@ def main(fileName: str):
     plt.show()
 
 if __name__ == '__main__':
-    main("2022-05-22T18:19:11.490949.log")
+    main("test.log")
