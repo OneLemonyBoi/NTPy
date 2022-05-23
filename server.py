@@ -4,15 +4,9 @@ import time
 from io import TextIOWrapper
 
 from _pynetworktables import NetworkTable, NetworkTableEntry
-from _pynetworktables._impl.structs import ConnectionInfo
 from networktables import NetworkTables
 
-connected: bool = False
-log: TextIOWrapper
-
 def main():
-    global connected
-    global log
     NetworkTables.initialize()
     table: NetworkTable = NetworkTables.getTable("SmartDashboard")
     xEntry: NetworkTableEntry = table.getEntry("x")

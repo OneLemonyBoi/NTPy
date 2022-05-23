@@ -1,12 +1,15 @@
+import datetime
 import math
 from typing import TextIO
 import matplotlib.pyplot as plt
 import numpy as np
 import dateutil.parser as dp
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 
 def main(fileName: str):
-    startTime = dp.isoparse(fileName.strip(".log"))
+    startTime: datetime = dp.isoparse(fileName.strip(".log"))
     plt.style.use('_mpl-gallery')
 
     file: TextIO = open(fileName, "r")
@@ -19,18 +22,18 @@ def main(fileName: str):
 
     for variables in create:
         splitList: list = variables.split(" ")
-        x = round(dp.isoparse(splitList[5]).timestamp() - startTime.timestamp(), 3)
-        y = float(splitList[3])
+        x: float = round(dp.isoparse(splitList[5]).timestamp() - startTime.timestamp(), 3)
+        y: float = float(splitList[3])
         plot[splitList[1]] = [[x], [y]]
 
     for variables in update:
         splitList: list = variables.split(" ")
-        x = round(dp.isoparse(splitList[5]).timestamp() - startTime.timestamp(), 3)
-        y = float(splitList[3])
+        x: float = round(dp.isoparse(splitList[5]).timestamp() - startTime.timestamp(), 3)
+        y: float = float(splitList[3])
         plot[splitList[1]][0].append(x)
         plot[splitList[1]][1].append(y)
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(); fig: Figure; ax: Axes
     plots: list = []
     for key in plot:
         plots.append(key)
@@ -38,9 +41,9 @@ def main(fileName: str):
     plt.legend(plots)
 
     ax.set(autoscale_on = True)
-    xStart, xEnd = ax.get_xlim()
+    xStart, xEnd = ax.get_xlim(); xStart: float; xEnd: float
     ax.xaxis.set_ticks(np.arange(math.floor(xStart), math.ceil(xEnd), 1))
-    yStart, yEnd = ax.get_ylim()
+    yStart, yEnd = ax.get_ylim(); yStart: float; yEnd: float
     ax.yaxis.set_ticks(np.arange(math.floor(yStart), math.ceil(yEnd), 1))
     ax.set_xlabel('time', fontsize=12)
     ax.set_ylabel('number', fontsize=12)
